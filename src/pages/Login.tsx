@@ -9,15 +9,18 @@ import {
   TitleForm,
 } from "../Styled";
 import { useState } from "react";
+// import { useAppContext } from "../appContext";
 
 function LoginPage({ setLoggedIn }: { setLoggedIn: (value: boolean) => void }) {
   const navigate = useNavigate();
+  // const { setUser } = useAppContext();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = () => {
     setLoggedIn(true);
+    // setUser({ email, name, phone, username });
     navigate("/dashboard");
   };
 

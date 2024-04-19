@@ -1,4 +1,4 @@
-import React from "react";
+
 
 import { Logo, Nav, ShareImgContainer } from "../Styled";
 import icon from "../assets/icon.png";

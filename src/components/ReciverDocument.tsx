@@ -26,7 +26,10 @@ export const ReciverDocument = ({ type }: { type: string }) => {
 
   const handleSendProof = () => {
     if (pdfFile) {
-      setDocument(pdfFile);
+      setDocument({
+        archive: pdfFile,
+        type: type,
+      });
       enqueueSnackbar("Comprovante enviado com sucesso!", {
         variant: "success",
       });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   BalanceContainer,
   Container,
@@ -14,7 +14,7 @@ import openEye from "../assets/open-eye.png";
 import { useAppContext } from "../appContext";
 
 export const Balance = () => {
-  const { saldo, setSaldo, balance, setBalance, windowSize } = useAppContext();
+  const { saldo,  balance,  windowSize } = useAppContext();
 
   const [isBlurred, setIsBlurred] = useState(true);
   const toggleBlur = () => setIsBlurred(!isBlurred);

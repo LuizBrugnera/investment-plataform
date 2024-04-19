@@ -35,12 +35,17 @@ type Contract = {
   method: PayMethodEnum;
   investmentType: InvestmentTypeEnum;
   status: StatusEnum;
-  document?: string;
+  document?: Document;
 };
 
 type WindowSize = {
   width: number | null;
   height: number | null;
+};
+
+type Document = {
+  archive: string;
+  type: string;
 };
 
 interface AppContextType {
@@ -52,7 +57,7 @@ interface AppContextType {
   payMethod: PayMethodEnum;
   contracts: Contract[];
   pixCpf: string;
-  document: string;
+  document: Document;
   pixCellphone: string;
   windowSize: WindowSize;
   setPixCpf: (value: string) => void;
@@ -60,7 +65,7 @@ interface AppContextType {
   setBalance: (value: number) => void;
   setSaldo: (value: number) => void;
   setValue: (value: number) => void;
-  setDocument: (value: string) => void;
+  setDocument: React.Dispatch<React.SetStateAction<Document>>;
   setInvestType: React.Dispatch<React.SetStateAction<InvestmentTypeEnum>>;
   setPayMethod: React.Dispatch<React.SetStateAction<PayMethodEnum>>;
   setContracts: React.Dispatch<React.SetStateAction<Contract[]>>;
@@ -86,7 +91,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [contracts, setContracts] = React.useState([] as Contract[]);
   const [pixCpf, setPixCpf] = React.useState("");
   const [pixCellphone, setPixCellphone] = React.useState("");
-  const [document, setDocument] = React.useState("");
+  const [document, setDocument] = React.useState({} as Document);
 
   const [windowSize, setWindowSize] = React.useState({
     width: null as number | null,
@@ -109,7 +114,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
         method: PayMethodEnum.PIX_COLA,
         investmentType: investType,
         status: StatusEnum.PENDING,
-        document: document,
+        document,
       },
     ]);
 

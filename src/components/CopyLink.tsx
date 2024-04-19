@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { CustomImg, ImgContainer, ShareLink } from "../Styled";
 import copyImg from "../assets/copy.png";
 import { useSnackbar } from "notistack";
