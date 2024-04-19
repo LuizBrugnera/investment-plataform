@@ -9,11 +9,11 @@ import {
   TitleForm,
 } from "../Styled";
 import { useState } from "react";
-// import { useAppContext } from "../appContext";
+import { useAppContext } from "../appContext";
 
-function LoginPage({ setLoggedIn }: { setLoggedIn: (value: boolean) => void }) {
+function LoginPage() {
   const navigate = useNavigate();
-  // const { setUser } = useAppContext();
+  const { setLoggedIn } = useAppContext();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

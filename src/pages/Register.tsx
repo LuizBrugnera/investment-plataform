@@ -10,11 +10,11 @@ import {
   TitleForm,
 } from "../Styled";
 import { useNavigate, useParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { useSnackbar } from "notistack";
 
 export const Register = () => {
   const { affiliate } = useParams();
-  console.log(affiliate);
+  const { enqueueSnackbar } = useSnackbar();
   const [phone, setPhone] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -61,7 +61,9 @@ export const Register = () => {
       password === "" ||
       confirmPassword === ""
     ) {
-      toast.error("Preencha todos os campos");
+      enqueueSnackbar("Preencha todos os campos", {
+        variant: "error",
+      });
       return false;
     }
     return true;
@@ -71,32 +73,48 @@ export const Register = () => {
     if (!allFill()) return;
 
     if (password !== confirmPassword) {
-      toast.error("As senhas não coincidem");
+      enqueueSnackbar("As senhas não coincidem", {
+        variant: "error",
+      });
       return;
     }
 
     if (password.length < 6) {
-      toast.error("A senha precisa ter no mínimo 6 caracteres");
+      enqueueSnackbar("A senha deve ter no mínimo 6 caracteres", {
+        variant: "error",
+      });
       return;
     }
 
     if (!checked) {
-      toast.error("Você precisa concordar com os termos de uso");
+      enqueueSnackbar("Aceite os termos e condições", {
+        variant: "error",
+      });
       return;
     }
 
     if (phone.length < 14) {
-      toast.error("Preencha o campo de telefone corretamente");
+      enqueueSnackbar("Telefone inválido", {
+        variant: "error",
+      });
       return;
     }
 
     if (!email.includes("@") || !email.includes(".")) {
-      toast.error("Email inválido");
+      enqueueSnackbar("Email inválido", {
+        variant: "error",
+      });
       return;
     }
 
-    toast.success("Usuário cadastrado com sucesso!");
-    toast.success("Entrando...");
+    enqueueSnackbar("Cadastro efetuado com sucesso!", {
+      variant: "success",
+    });
+
+    enqueueSnackbar("Entrando...", {
+      variant: "success",
+    });
+
     setTimeout(() => {
       navigate("/login");
     }, 3000);
@@ -104,7 +122,6 @@ export const Register = () => {
 
   return (
     <RegisterContainer>
-      <ToastContainer />
       <FormContainer>
         <MediumText padding="3px 0px" fontWeight={400} fontsize={18}>
           {affiliate ? `Você foi indicado por ${affiliate}` : ""}

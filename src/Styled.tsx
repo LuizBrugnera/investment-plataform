@@ -238,6 +238,9 @@ export const ShareLink = styled.div<ShareLinkProps>`
     width: 100%;
     margin: 0px 0px 0px 0px;
   }
+  @media (max-width: 450px) {
+    font-size: 13px;
+  }
 `;
 
 export const ShareImgContainer = styled.a`
@@ -306,6 +309,9 @@ export const ChangeValueContainer = styled.div`
   @media (max-width: 1500px) {
     width: 90%;
   }
+  @media (max-width: 500px) {
+    padding: 20px 0px 20px 0px;
+  }
 `;
 
 export const BorderPoints = styled.div`
@@ -327,6 +333,16 @@ export const ButtonCircle = styled.button`
   color: #fff;
   font-size: 20px;
   cursor: pointer;
+
+  @media (max-width: 1300px) {
+    width: 40px;
+    height: 40px;
+  }
+  @media (max-width: 350px) {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+  }
 `;
 
 export const ChangeValueInput = styled.input`
@@ -341,6 +357,11 @@ export const ChangeValueInput = styled.input`
   border: 1px solid #575555;
   text-align: center;
   color: #fff;
+
+  @media (max-width: 500px) {
+    font-size: 16px;
+    width: 10%;
+  }
 `;
 
 interface PresetValueButtonProps {
@@ -410,6 +431,10 @@ export const PayMethodContainer = styled.div`
   @media (max-width: 1500px) {
     width: 90%;
   }
+
+  @media (max-width: 450px) {
+    padding: 20px 0px;
+  }
 `;
 
 interface BoxProps {
@@ -442,6 +467,10 @@ export const PixContainer = styled.div`
 
   @media (max-width: 1050px) {
     flex-direction: column;
+  }
+
+  @media (max-width: 450px) {
+    padding: 20px 0px;
   }
 `;
 
@@ -740,6 +769,9 @@ export const InvestmentTypeContainer = styled.div`
   @media (max-width: 1500px) {
     width: 90%;
   }
+  @media (max-width: 450px) {
+    padding: 20px 0px;
+  }
 `;
 
 export const ConfigBox = styled.div`
@@ -823,6 +855,9 @@ export const ContainerInvestment = styled.div<ContainerInvestmentProps>`
   @media (max-width: 690px) {
     gap: 20px;
   }
+  @media (max-width: 450px) {
+    padding: 20px 5px;
+  }
 `;
 
 interface MethodContainerProps {
@@ -847,6 +882,10 @@ export const MethodContainer = styled.div<MethodContainerProps>`
   }
   @media (max-width: 760px) {
     min-width: 300px;
+  }
+  @media (max-width: 450px) {
+    padding: 20px 5px;
+    min-width: 200px;
   }
 `;
 

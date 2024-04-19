@@ -71,6 +71,8 @@ interface AppContextType {
   setContracts: React.Dispatch<React.SetStateAction<Contract[]>>;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   createContract: () => void;
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  loggedIn: boolean;
 }
 
 const AppContext = React.createContext<AppContextType | undefined>(undefined);
@@ -92,7 +94,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [pixCpf, setPixCpf] = React.useState("");
   const [pixCellphone, setPixCellphone] = React.useState("");
   const [document, setDocument] = React.useState({} as Document);
-
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [windowSize, setWindowSize] = React.useState({
     width: null as number | null,
     height: null as number | null,
@@ -165,6 +167,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
         setDocument,
         windowSize,
         createContract,
+        setLoggedIn,
+        loggedIn,
       }}
     >
       {children}
