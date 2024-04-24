@@ -11,6 +11,7 @@ import {
 } from "../Styled";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { createUser } from "../services/UserService";
 
 export const Register = () => {
   const { affiliate } = useParams();
@@ -22,6 +23,7 @@ export const Register = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [checked, setChecked] = useState<boolean>(false);
+  const [disable, setDisable] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -72,6 +74,13 @@ export const Register = () => {
   const handleRegister = async () => {
     if (!allFill()) return;
 
+    setEmail(email.trim());
+    setPassword(password.trim());
+    setConfirmPassword(confirmPassword.trim());
+    setName(name.trim());
+    setUsername(username.trim());
+    setPhone(phone.trim());
+
     if (password !== confirmPassword) {
       enqueueSnackbar("As senhas não coincidem", {
         variant: "error",
@@ -107,17 +116,28 @@ export const Register = () => {
       return;
     }
 
-    enqueueSnackbar("Cadastro efetuado com sucesso!", {
-      variant: "success",
-    });
+    const newUser = await createUser(email, name, password, phone, username);
 
-    enqueueSnackbar("Entrando...", {
-      variant: "success",
-    });
+    if (newUser) {
+      setDisable(true);
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 3000);
+      enqueueSnackbar("Cadastro efetuado com sucesso!", {
+        variant: "success",
+      });
+
+      enqueueSnackbar("Entrando...", {
+        variant: "success",
+      });
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+      return;
+    }
+
+    enqueueSnackbar("Usuário já cadastrado", {
+      variant: "error",
+    });
   };
 
   return (
@@ -202,7 +222,11 @@ export const Register = () => {
             Eu concordo com os termos e condições de uso
           </MediumText>
         </ContainerLeft>
-        <ButtonForm onClick={handleRegister} margin="20px 0px 0px 0px">
+        <ButtonForm
+          onClick={handleRegister}
+          margin="20px 0px 0px 0px"
+          disabled={disable}
+        >
           Criar Conta
         </ButtonForm>
       </FormContainer>

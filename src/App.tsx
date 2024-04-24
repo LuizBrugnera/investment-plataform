@@ -4,9 +4,10 @@ import Dashboard from "./pages/Dashboard";
 import { Navbar } from "./components/Navbar";
 import { Register } from "./pages/Register";
 import { useAppContext } from "./appContext";
+import Admin from "./pages/Admin";
 
 function App() {
-  const { loggedIn } = useAppContext();
+  const { loggedIn, user } = useAppContext();
   return (
     <>
       <Navbar />
@@ -18,6 +19,10 @@ function App() {
         <Route
           path="/dashboard"
           element={loggedIn ? <Dashboard /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/admin"
+          element={user.role === "ADMIN" ? <Admin /> : <Navigate to="/" />}
         />
         <Route path="register/:affiliate" element={<Register />} />
         <Route path="register/" element={<Register />} />

@@ -1,4 +1,5 @@
 import { createGlobalStyle, styled } from "styled-components";
+import { darken } from "polished";
 
 export const GlobalStyles = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
@@ -39,7 +40,7 @@ export const Nav = styled.nav`
 `;
 
 export const Logo = styled.img`
-  width: 120px;
+  width: 160px;
   height: 60px;
   margin: 15px 0px 10px 180px;
   @media (max-width: 1000px) {
@@ -48,7 +49,7 @@ export const Logo = styled.img`
   @media (max-width: 500px) {
     margin: 15px 0px 10px 0px;
     width: 170px;
-    height: 100px;
+    height: 80px;
   }
 `;
 
@@ -116,7 +117,6 @@ export const MediumText = styled.h2<MediumTextProps>`
   color: ${(props) => props.color || "#fff"};
   font-weight: ${(props) => props.fontWeight || 500};
 `;
-
 interface ImgContainerProps {
   mousePointer?: string;
   backGround?: boolean;
@@ -216,12 +216,14 @@ export const Container = styled.div<ContainerProps>`
 
 interface ShareLinkProps {
   backgroundcolor?: string;
+  init?: boolean;
+  nomaxwidth?: boolean;
 }
 
 export const ShareLink = styled.div<ShareLinkProps>`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${(props) => (props.init ? "flex-start" : "space-between;")};
   color: #fff;
   font-size: 17px;
   margin: 0px 10px 0px 0px;
@@ -229,6 +231,44 @@ export const ShareLink = styled.div<ShareLinkProps>`
   width: 85%;
   padding: 15px;
   border-radius: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 600px;
+  cursor: pointer;
+  :disabled {
+    background-color: #575555;
+  }
+
+  @media (max-width: 1075px) {
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+  }
+  @media (max-width: 450px) {
+    font-size: 13px;
+  }
+`;
+
+interface ShareLinkNoMaxWidthProps {
+  backgroundcolor?: string;
+  init?: boolean;
+  nomaxwidth?: boolean;
+}
+
+export const ShareLinkNoMaxWidth = styled.div<ShareLinkNoMaxWidthProps>`
+  display: flex;
+  align-items: center;
+  justify-content: ${(props) => (props.init ? "flex-start" : "space-between;")};
+  color: #fff;
+  font-size: 17px;
+  margin: 0px 10px 0px 0px;
+  background-color: ${(props) => props.backgroundcolor || "#19202e"};
+  width: 85%;
+  padding: 15px;
+  border-radius: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
   :disabled {
     background-color: #575555;
@@ -937,7 +977,7 @@ export const PixContainerMethod = styled.div`
   padding: 0px;
   color: #fff;
   font-size: 20px;
-  @media (max-width: 1180px) {
+  @media (max-width: 1600px) {
     flex-wrap: wrap;
   }
 `;
@@ -989,13 +1029,52 @@ export const ContractBox = styled.div`
 
   color: #fff;
   font-size: 20px;
+  min-height: 600px;
   background-color: #19202e;
   border-radius: 10px;
   border: 1px solid #575555;
   @media (max-width: 1500px) {
-    width: 50%;
+    width: 48%;
+  }
+  @media (max-width: 1500px) {
+    width: 47%;
   }
   @media (max-width: 990px) {
     width: 100%;
+  }
+`;
+
+export const AdminContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 230vh;
+  flex: 1;
+`;
+
+interface ButtonContractProps {
+  backgroundcolor?: "Rejected" | "Approved";
+  invisible?: boolean;
+}
+
+export const ButtonContract = styled.button<ButtonContractProps>`
+  padding: 15px 50px;
+  margin: 10px 20px;
+  font-size: 18px;
+  width: 90%;
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.backgroundcolor === "Rejected" ? "#d83030" : "#147434"};
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  visibility: ${(props) => (props.invisible ? "hidden" : "visible")};
+
+  &:active {
+    background-color: ${(props) =>
+      darken(
+        0.1,
+        props.backgroundcolor === "Rejected" ? "#d83030" : "#147434"
+      )};
   }
 `;

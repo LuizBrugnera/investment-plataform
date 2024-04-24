@@ -36,7 +36,7 @@ export const DolarMethod = () => {
         >
           Código da Carteira:
         </MediumText>
-        <CopyLink value="chave da carteira Dolar" backgroundcolor="#232c3d" />
+        <CopyLink value="chave da carteira Dolar" backgroundcolor="#232c3d" init={true}/>
         <ReciverDocument type="Dolar" />
       </ContainerWithBorderLeft>
     </MethodWrapContainer>

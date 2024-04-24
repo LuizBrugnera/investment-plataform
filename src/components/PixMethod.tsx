@@ -1,4 +1,3 @@
-
 import {
   ContainerWithBorderLeft,
   CustomImg,
@@ -71,7 +70,11 @@ export const PixMethod = () => {
         >
           Chave pix (ALEATORIA):
         </MediumText>
-        <CopyLink value="chavealeatoria" backgroundcolor="#232c3d" />
+        <CopyLink
+          value="00020126410014BR.GOV.BCB.PIX0119mrjacanyt@gmail.com5204000053039865802BR5923Adriano da Silva Campos6012Santa Izabel62070503***6304E6E5"
+          backgroundcolor="#232c3d"
+          init={true}
+        />
         <ReciverDocument type="Pix" />
       </ContainerWithBorderLeft>
     </MethodWrapContainer>

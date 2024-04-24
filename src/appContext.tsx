@@ -1,5 +1,12 @@
 import { useSnackbar } from "notistack";
 import React from "react";
+import {
+  createContractApi,
+  createContractSaldoApi,
+  getUserBalance,
+  getUserContracts,
+  getUserSaldo,
+} from "./services/UserService";
 
 // Defina o tipo para o valor do contexto
 enum InvestmentTypeEnum {
@@ -16,10 +23,11 @@ enum PayMethodEnum {
 }
 
 type User = {
-  name: string;
+  id: number;
+  fullname: string;
   username: string;
   email: string;
-  phone: string;
+  role: string;
 };
 
 enum StatusEnum {
@@ -30,12 +38,14 @@ enum StatusEnum {
 
 type Contract = {
   id?: number;
+  userId: number;
   value: number;
-  date: Date;
   method: PayMethodEnum;
   investmentType: InvestmentTypeEnum;
   status: StatusEnum;
   document?: Document;
+  startDate: Date;
+  endDate: Date;
 };
 
 type WindowSize = {
@@ -44,9 +54,27 @@ type WindowSize = {
 };
 
 type Document = {
-  archive: string;
+  archive: File | string;
   type: string;
+  documentString?: string;
+  documentUrl?: string;
 };
+
+interface ContractDB {
+  createdAt: string;
+  documentUrl: string;
+  documentString: string;
+  documentType: string;
+  endDate: string;
+  id: number;
+  investmentType: string;
+  method: string;
+  startDate: string;
+  status: string;
+  updatedAt: string;
+  userId: number;
+  value: number;
+}
 
 interface AppContextType {
   user: User;
@@ -70,7 +98,9 @@ interface AppContextType {
   setPayMethod: React.Dispatch<React.SetStateAction<PayMethodEnum>>;
   setContracts: React.Dispatch<React.SetStateAction<Contract[]>>;
   setUser: React.Dispatch<React.SetStateAction<User>>;
-  createContract: () => void;
+  createContract: (documentLocal?: Document) => void;
+  loginToken: string;
+  setLoginToken: React.Dispatch<React.SetStateAction<string>>;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   loggedIn: boolean;
 }
@@ -99,21 +129,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     width: null as number | null,
     height: null as number | null,
   });
+  const [loginToken, setLoginToken] = React.useState("");
 
-  const createContract = async () => {
+  const createContract = async (documentLocal?: Document) => {
     if (value <= 0) {
       enqueueSnackbar("Valor inválido!", {
         variant: "error",
       });
       return;
     }
+    console.log("Creating contract");
+    const startDate = new Date();
+
+    const months = investType === InvestmentTypeEnum.SIX_MONTHS ? 6 : 12;
+
+    const endDate = new Date();
+    endDate.setMonth(startDate.getMonth() + months);
 
     setContracts([
       ...contracts,
       {
-        date: new Date(),
+        userId: user.id,
+        startDate,
+        endDate,
         value: value,
-        method: PayMethodEnum.PIX_COLA,
+        method: payMethod,
         investmentType: investType,
         status: StatusEnum.PENDING,
         document,
@@ -124,7 +164,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       variant: "success",
     });
 
-    // chama a api
+    const documentApi = {
+      archive: documentLocal?.archive || document.archive,
+      type: documentLocal?.type || document.type,
+    };
+
+    if (payMethod) {
+      await createContractSaldoApi(investType, payMethod, value);
+    } else {
+      await createContractApi(
+        documentApi.archive,
+        documentApi.type,
+        investType,
+        payMethod,
+        value
+      );
+    }
   };
 
   React.useEffect(() => {
@@ -141,6 +196,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      const updateData = async () => {
+        getUserContracts().then((data: ContractDB[]) => {
+          const contractsData = data.map((contract: ContractDB) => ({
+            id: contract.id,
+            userId: contract.userId,
+            value: contract.value,
+            startDate: new Date(contract.startDate),
+            endDate: new Date(contract.endDate),
+            method: contract.method as PayMethodEnum,
+            investmentType: contract.investmentType as InvestmentTypeEnum,
+            status: contract.status as StatusEnum,
+            document: {
+              archive: contract.documentUrl,
+              type: contract.documentType,
+              documentString: contract.documentString,
+              documentUrl: contract.documentUrl,
+            } as Document,
+          }));
+          setContracts(contractsData);
+        });
+        getUserBalance().then((data) => setBalance(data.balance));
+        getUserSaldo().then((data) => setSaldo(data.saldo));
+      };
+
+      updateData();
+    }
+  }, [loggedIn, user]);
 
   return (
     <AppContext.Provider
@@ -169,6 +254,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
         createContract,
         setLoggedIn,
         loggedIn,
+        loginToken,
+        setLoginToken,
       }}
     >
       {children}

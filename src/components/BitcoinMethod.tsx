@@ -1,4 +1,3 @@
-
 import {
   Container,
   ContainerWithBorderLeft,
@@ -33,7 +32,11 @@ export const BitcoinMethod = () => {
         >
           Código da Carteira:
         </MediumText>
-        <CopyLink value="chave da carteira BTC" backgroundcolor="#232c3d" />
+        <CopyLink
+          value="chave da carteira BTC"
+          backgroundcolor="#232c3d"
+          init={true}
+        />
         <ReciverDocument type="BTC" />
       </ContainerWithBorderLeft>
     </MethodWrapContainer>

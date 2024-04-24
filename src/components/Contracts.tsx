@@ -1,5 +1,5 @@
-
 import {
+  ButtonContract,
   ContractBox,
   ContractRowContainer,
   ContractsContainer,
@@ -7,6 +7,8 @@ import {
   MediumText,
 } from "../Styled";
 import { useAppContext } from "../appContext";
+import { approveContractApi, rejectContractApi } from "../services/UserService";
+import DownloadDocument from "./DownloadDocument";
 enum InvestmentTypeEnum {
   SIX_MONTHS = "SIX_MONTHS",
   ONE_YEAR = "ONE_YEAR",
@@ -25,8 +27,8 @@ enum StatusEnum {
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
 }
-export const Contracts = () => {
-  const { contracts } = useAppContext();
+export const Contracts = ({ admin }: { admin?: boolean }) => {
+  const { contracts, setContracts } = useAppContext();
 
   const formatStatus = (status: StatusEnum) => {
     switch (status) {
@@ -69,6 +71,70 @@ export const Contracts = () => {
     }
   };
 
+  const approveContract = (contractId: number) => {
+    console.log(`Contrato ${contractId} aprovado!`);
+
+    const newContracts = contracts.map((contract) => {
+      if (contract.id === contractId) {
+        return { ...contract, status: StatusEnum.APPROVED };
+      }
+      return contract;
+    });
+
+    setContracts(newContracts);
+
+    approveContractApi(contractId);
+
+    // chamar api para aprovar contrato
+  };
+
+  const rejectContract = (contractId: number) => {
+    console.log(`Contrato ${contractId} rejeitado!`);
+
+    const newContracts = contracts.map((contract) => {
+      if (contract.id === contractId) {
+        return { ...contract, status: StatusEnum.REJECTED };
+      }
+      return contract;
+    });
+
+    setContracts(newContracts);
+
+    rejectContractApi(contractId);
+  };
+
+  const testUrl = (url?: string) => {
+    const regex = /documentArchive/i;
+
+    if (!url) {
+      return false;
+    }
+
+    if (regex.test(url)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const formatDate = (date: Date) => {
+    if (!(date instanceof Date)) {
+      throw new TypeError(
+        "O argumento fornecido deve ser uma instância de Date."
+      );
+    }
+
+    const day = date.getDate(); // Pega o dia do mês (1-31)
+    const month = date.getMonth() + 1; // Pega o mês (0-11) e adiciona 1 porque Janeiro é 0
+    const year = date.getFullYear(); // Pega o ano com quatro dígitos
+
+    // Preenche com zero à esquerda se o dia ou mês for menor que 10
+    const formatDay = day < 10 ? "0" + day : day;
+    const formatMonth = month < 10 ? "0" + month : month;
+
+    return `${formatDay}/${formatMonth}/${year}`;
+  };
+
   return (
     <ContractsContainer>
       <MediumText fontsize={25} fontWeight={600} padding="30px">
@@ -105,12 +171,64 @@ export const Contracts = () => {
                 }).format(contract.value)}
               </MediumText>
               <MediumText fontsize={16} padding="10px">
-                Método de pagamento: {formatMethod(contract.method)}
+                Data de Início {formatDate(contract.startDate)}
               </MediumText>
               <MediumText fontsize={16} padding="10px">
+                Data do Fim: {formatDate(contract.endDate)}
+              </MediumText>
+              <MediumText fontsize={16} padding="10px">
+                Método de pagamento: {formatMethod(contract.method)}
+              </MediumText>
+              <MediumText fontsize={16} padding="10px 0px 0px 0px">
+                Documento:
+              </MediumText>
+              <MediumText fontsize={16} padding="10px 70px 10px 70px">
+                {testUrl(contract.document?.documentUrl)
+                  ? DownloadDocument({
+                      url: contract.document?.documentUrl ?? "",
+                    })
+                  : contract.document?.documentString || "Não informado"}
+              </MediumText>
+              <MediumText fontsize={16} padding="10px">
+                Tipo: {contract.document?.type || "Não informado"}
+              </MediumText>
+              <MediumText fontsize={16} padding="10px 10px 30px 10px">
                 Tipo de investimento:{" "}
                 {formatInvestmentType(contract.investmentType)}
               </MediumText>
+
+              {admin && contract.status === StatusEnum.PENDING && (
+                <>
+                  <ButtonContract
+                    onClick={() => approveContract(Number(contract.id))}
+                    backgroundcolor="Approved"
+                  >
+                    Aprovar
+                  </ButtonContract>
+                  <ButtonContract
+                    onClick={() => rejectContract(Number(contract.id))}
+                    backgroundcolor="Rejected"
+                  >
+                    Rejeitar
+                  </ButtonContract>
+                </>
+              )}
+              {admin && contract.status !== StatusEnum.PENDING && (
+                <>
+                  <ButtonContract
+                    onClick={() => console.log(`Aprovado`)}
+                    invisible={true}
+                  >
+                    Aprovar
+                  </ButtonContract>
+                  <ButtonContract
+                    onClick={() => console.log("Rejeitado")}
+                    invisible={true}
+                  >
+                    Rejeitar
+                  </ButtonContract>
+                </>
+              )}
 
               <HorizontalLine />
             </ContractBox>

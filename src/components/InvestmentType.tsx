@@ -55,7 +55,7 @@ export const InvestmentType = () => {
           </MediumText>
           <BorderPoints />
           <MediumText fontsize={16} padding={"15px 10px"} color="#30e739">
-            16,5% a.a.
+            120% em 6 Meses
           </MediumText>
         </ContainerInvestment>
         <ContainerInvestment
@@ -74,7 +74,7 @@ export const InvestmentType = () => {
           </MediumText>
           <BorderPoints />
           <MediumText fontsize={16} padding={"15px 10px"} color="#30e739">
-            32,5% a.a.
+            250% Em 12 Meses
           </MediumText>
         </ContainerInvestment>
       </ContainerInvestment>

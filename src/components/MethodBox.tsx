@@ -8,14 +8,12 @@ import {
   MethodContainer,
 } from "../Styled";
 import balance from "../assets/balance.png";
-import btc from "../assets/btc.png";
 import dolar from "../assets/dollar.png";
 import pix from "../assets/pix.png";
 
 enum PayMethodEnum {
   PIX = "PIX",
   PIX_COLA = "PIX_COLA",
-  BITCOIN = "BITCOIN",
   DOLAR = "DOLAR",
   SALDO = "SALDO",
 }
@@ -23,7 +21,6 @@ enum PayMethodEnum {
 const images = {
   [PayMethodEnum.PIX]: pix,
   [PayMethodEnum.PIX_COLA]: pix,
-  [PayMethodEnum.BITCOIN]: btc,
   [PayMethodEnum.DOLAR]: dolar,
   [PayMethodEnum.SALDO]: balance,
 };
@@ -31,7 +28,6 @@ const images = {
 const text = {
   [PayMethodEnum.PIX]: "PIX",
   [PayMethodEnum.PIX_COLA]: "PIX Copia e Cola",
-  [PayMethodEnum.BITCOIN]: "BITCOIN",
   [PayMethodEnum.DOLAR]: "Dolár",
   [PayMethodEnum.SALDO]: "Saldo",
 };

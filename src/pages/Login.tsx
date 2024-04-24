@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ButtonForm,
@@ -8,26 +9,60 @@ import {
   MediumText,
   TitleForm,
 } from "../Styled";
-import { useState } from "react";
 import { useAppContext } from "../appContext";
+import { login } from "../services/UserService";
+import { useSnackbar } from "notistack";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { setLoggedIn } = useAppContext();
+  const { setLoggedIn, setUser } = useAppContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleLogin = () => {
-    setLoggedIn(true);
-    // setUser({ email, name, phone, username });
-    navigate("/dashboard");
+  const handleLogin = async () => {
+    try {
+      const trimmedEmail = email.trim();
+      const trimmedPassword = password.trim();
+
+      const user = await login(trimmedEmail, trimmedPassword);
+      if (user) {
+        setUser({
+          email: user.email,
+          fullname: user.fullname,
+          username: user.username,
+          id: user.id,
+          role: user.role,
+        });
+        setLoggedIn(true);
+        navigate(user.role === "ADMIN" ? "/admin" : "/dashboard");
+      } else {
+        enqueueSnackbar("Email ou Senha Incorretos!", { variant: "error" });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      enqueueSnackbar("Erro ao fazer login!", { variant: "error" });
+    }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter" && email.trim() && password.trim()) {
+        handleLogin();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [email, password]); // Incluindo email e password nas dependências
 
   const handleRegister = () => {
     navigate("/register");
   };
-
   return (
     <LoginContainer>
       <FormContainer>

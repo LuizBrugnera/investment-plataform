@@ -28,6 +28,7 @@ export const PixColaMethod = () => {
     pixCpf,
     value,
     createContract,
+    setDocument,
   } = useAppContext();
 
   const formatCpf = (value: string) => {
@@ -60,7 +61,12 @@ export const PixColaMethod = () => {
     // Remove todos os caracteres não numéricos
     let cleaned = value.replace(/\D/g, "");
 
+    if (value.length === 10) {
+      return value;
+    }
+
     // Formata como (54) 99999-9999
+
     if (cleaned.length > 6) {
       cleaned = `(${cleaned.slice(0, 2)}) ${cleaned.slice(
         2,
@@ -100,7 +106,12 @@ export const PixColaMethod = () => {
       variant: "success",
     });
     toggleModal();
-    createContract();
+    const document = {
+      archive: `phone : ${pixCellphone} cpf : ${pixCpf}`,
+      type: "PIX_COLA",
+    };
+    setDocument(document);
+    createContract(document);
   };
 
   const toggleModal = () => {
