@@ -2,7 +2,7 @@ const DownloadDocument = ({ url }: { url: string }) => {
   const handleDownload = async () => {
     const urlFormated = url.split("/uploads/")[1];
     const response = await fetch(
-      `http://localhost:3000/download-archive/${urlFormated}`
+      `${import.meta.env.VITE_API_URL}/download-archive/${urlFormated}`
     );
     if (response.ok) {
       const blob = await response.blob();
