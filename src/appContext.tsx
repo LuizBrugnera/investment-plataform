@@ -169,7 +169,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       type: documentLocal?.type || document.type,
     };
 
-    if (payMethod) {
+    if (payMethod === PayMethodEnum.SALDO) {
       await createContractSaldoApi(investType, payMethod, value);
     } else {
       await createContractApi(
@@ -217,7 +217,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
               documentUrl: contract.documentUrl,
             } as Document,
           }));
-          setContracts(contractsData);
+
+          if (user.role === "ADMIN") {
+            const orderedContracts = contractsData.sort((a, b) => {
+              if (a.status === StatusEnum.PENDING) {
+                return -1;
+              } else if (a.status === StatusEnum.APPROVED) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+            setContracts(orderedContracts);
+          } else {
+            setContracts(contractsData);
+          }
         });
         getUserBalance().then((data) => setBalance(data.balance));
         getUserSaldo().then((data) => setSaldo(data.saldo));
