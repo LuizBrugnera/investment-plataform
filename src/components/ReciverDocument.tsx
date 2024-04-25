@@ -12,7 +12,6 @@ export const ReciverDocument = ({ type }: { type: string }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-
     if (file) {
       setPdfFile(file);
     }

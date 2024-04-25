@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as jwtDecode from "jwt-decode";
-
+import CryptoJS from "crypto-js";
 interface JwtPayload {
   id: number;
   email: string;
@@ -118,6 +118,15 @@ export const createContractApi = async (
     } else {
       formData.append("documentString", "Arquivo");
       formData.append("documentArchive", document);
+      const reader = new FileReader();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      reader.onload = function (event: any) {
+        const wordArray = CryptoJS.lib.WordArray.create(event.target.result);
+        const hash = CryptoJS.MD5(wordArray).toString();
+        formData.append("hash", hash);
+        console.log("Hash", hash);
+      };
+      reader.readAsArrayBuffer(document);
     }
     formData.append("documentType", documentType);
     formData.append("investmentType", investmentType);
