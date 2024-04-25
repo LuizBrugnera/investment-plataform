@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSnackbar } from "notistack";
 import React from "react";
 import {
