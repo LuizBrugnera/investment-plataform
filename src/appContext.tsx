@@ -220,7 +220,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
           }));
 
           if (user.role === "ADMIN") {
-            const orderedContracts = contractsData.sort((a, b) => {
+            const orderedContracts = contractsData.sort((a) => {
               if (a.status === StatusEnum.PENDING) {
                 return -1;
               } else if (a.status === StatusEnum.APPROVED) {
