@@ -6,6 +6,7 @@ const DownloadDocument = ({ url }: { url: string }) => {
     );
     if (response.ok) {
       const blob = await response.blob();
+      console.log(blob.toString());
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = downloadUrl;

@@ -113,6 +113,8 @@ export const createContractApi = async (
     const formData = new FormData();
     const documentIsString = typeof document === "string";
 
+    console.log(document.toString())
+
     if (documentIsString) {
       formData.append("documentString", document);
     } else {

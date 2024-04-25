@@ -239,6 +239,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       };
 
       updateData();
+
+      const interval = setInterval(updateData, 30000);
+
+      return () => clearInterval(interval);
     }
   }, [loggedIn, user]);
 
